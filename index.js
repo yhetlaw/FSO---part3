@@ -30,8 +30,6 @@ app.get('/api/persons', (req, res) => {
   res.json(persons);
 });
 
-//res.send(`Insert id of person to show <input id="input-id"></input>`);
-
 app.get('/info', (req, res) => {
   let a = new Date().toString();
   console.log(a);
@@ -56,6 +54,31 @@ app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter((person) => person.id !== id);
 
   response.status(204).end();
+});
+
+const generateId = (min, max) => {
+  const randomId = persons.length > 0 ? Math.floor(Math.random() * (max - min)) + min : 0;
+  return randomId;
+};
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body;
+
+  if (!body.content) {
+    return response.status(400).json({
+      error: 'content missing',
+    });
+  }
+
+  const person = {
+    id: generateId(1, 5000000),
+    name: body.content,
+    number: generateId(000000000, 999999999),
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
 });
 
 const PORT = 3001;
