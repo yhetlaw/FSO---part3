@@ -64,20 +64,40 @@ const generateId = (min, max) => {
 app.post('/api/persons', (request, response) => {
   const body = request.body;
 
-  if (!body.content) {
+  if (!body.name) {
     return response.status(400).json({
-      error: 'content missing',
+      error: 'Name is missing',
+    });
+  } else if (!body.number) {
+    return response.status(400).json({
+      error: 'Number is missing',
+    });
+  } else if (persons.map((person) => person.name).includes(body.name)) {
+    return response.status(400).json({
+      error: 'Name must be unique',
     });
   }
 
+  /* !body.name
+    ? response.status(400).json({
+        error: 'Name is missing',
+      })
+    : !body.number
+    ? response.status(400).json({
+        error: 'Number is missing',
+      })
+    : persons.map((person) => person.name).includes(body.name)
+    ? response.status(400).json({
+        error: 'Name must be unique',
+      })
+    : response.sendStatus(200); */
+
   const person = {
     id: generateId(1, 5000000),
-    name: body.content,
-    number: generateId(000000000, 999999999),
+    name: body.name,
+    number: body.number,
   };
-
   persons = persons.concat(person);
-
   response.json(person);
 });
 
