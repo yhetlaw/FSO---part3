@@ -1,9 +1,9 @@
-POST http://localhost:3001/api/persons
+POST https://shielded-springs-68299.herokuapp.com/api/persons
 Content-Type: application/json
 
 {
-    "name": "Halo2",
-    "number": 3121312
+    "name": "Halo3",
+    "number": 31213412
 
 }
 
