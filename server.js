@@ -1,3 +1,6 @@
+require('dotenv').config();
+const Contact = require('./models/contact');
+
 const { json } = require('express');
 
 const express = require('express');
@@ -15,9 +18,6 @@ app.use(cors());
 
 const mongoose = require('mongoose');
 const { response } = require('express');
-
-require('dotenv').config();
-const Contact = require('./models/contact');
 
 let persons = [
   {
