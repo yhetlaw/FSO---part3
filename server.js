@@ -1,16 +1,23 @@
 const { json } = require('express');
-const express = require('express');
-const morgan = require('morgan');
 
+const express = require('express');
 const app = express();
 app.use(express.json());
 app.use(express.static('build'));
+
+const morgan = require('morgan');
 
 morgan.token('body', (req) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 const cors = require('cors');
 app.use(cors());
+
+const mongoose = require('mongoose');
+const { response } = require('express');
+
+require('dotenv').config();
+const Contact = require('./models/contact');
 
 let persons = [
   {
@@ -35,8 +42,15 @@ let persons = [
   },
 ];
 
+//CONNECTION
+const url = process.env.MONGODB_URI;
+mongoose.connect(url);
+
+//GET
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  Contact.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get('/info', (req, res) => {
@@ -58,21 +72,16 @@ app.get('/api/persons/:id', (request, response) => {
   }
 });
 
+//DELETE
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   persons = persons.filter((person) => person.id !== id);
-
   response.status(204).end();
 });
 
-const generateId = (min, max) => {
-  const randomId = persons.length > 0 ? Math.floor(Math.random() * (max - min)) + min : 0;
-  return randomId;
-};
-
+//POST
 app.post('/api/persons', (request, response) => {
   const body = request.body;
-
   if (!body.name) {
     return response.status(400).json({
       error: 'Name is missing',
@@ -81,22 +90,20 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({
       error: 'Number is missing',
     });
-  } else if (persons.map((person) => person.name).includes(body.name)) {
-    return response.status(400).json({
-      error: 'Name must be unique',
-    });
   }
 
-  const person = {
-    id: generateId(1, 5000000),
+  const contact = new Contact({
     name: body.name,
     number: body.number,
-  };
-  persons = persons.concat(person);
-  response.json(person);
+  });
+  contact.save().then((result) => {
+    console.log(`added ${body.name} number ${body.number} to phonebook`);
+  });
+  response.json(contact);
 });
 
-const PORT = process.env.PORT || 3001;
+//PORT
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
