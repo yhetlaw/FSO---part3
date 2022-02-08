@@ -45,7 +45,7 @@ let persons = [
 //CONNECTION
 const url = process.env.MONGODB_URI;
 mongoose.connect(url);
-//test
+
 //GET
 app.get('/api/persons', (req, res) => {
   Contact.find({}).then((persons) => {
