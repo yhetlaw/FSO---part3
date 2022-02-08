@@ -77,7 +77,8 @@ app.get('/api/persons/:id', (request, response) => {
 //DELETE
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
+  //persons = persons.filter((person) => person.id !== id);
+  db.contacts.deleteOne({ _id: ObjectId(id) });
   response.status(204).end();
 });
 
