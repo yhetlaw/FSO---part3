@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-
+const BSON = require('bson');
 const Contact = require('./models/contact');
 
 const { json } = require('express');
@@ -76,9 +76,11 @@ app.get('/api/persons/:id', (request, response) => {
 
 //DELETE
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  //persons = persons.filter((person) => person.id !== id);
-  db.contacts.deleteOne({ _id: ObjectId(id) });
+  const id = request.params.id;
+  console.log(id);
+  Contact.deleteOne({ _id: new BSON.ObjectId(id) }).then(() => {
+    console.log(`${objectId} has been deleted`);
+  });
   response.status(204).end();
 });
 
