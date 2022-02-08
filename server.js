@@ -1,4 +1,6 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
+
 const Contact = require('./models/contact');
 
 const { json } = require('express');
@@ -16,7 +18,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 const cors = require('cors');
 app.use(cors());
 
-const mongoose = require('mongoose');
 const { response } = require('express');
 
 let persons = [
@@ -43,6 +44,7 @@ let persons = [
 ];
 
 //CONNECTION
+console.log(process.env.MONGODB_URI);
 const url = process.env.MONGODB_URI;
 mongoose.connect(url);
 
@@ -103,6 +105,7 @@ app.post('/api/persons', (request, response) => {
 });
 
 //PORT
+console.log(process.env.PORT);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
