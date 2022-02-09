@@ -57,7 +57,7 @@ app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id;
   console.log(id);
   Contact.deleteOne({ _id: new BSON.ObjectId(id) }).then(() => {
-    console.log(`${objectId} has been deleted`);
+    console.log(`${BSON.ObjectId(id)} has been deleted`);
   });
   response.status(204).end();
 });
