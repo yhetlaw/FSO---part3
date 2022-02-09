@@ -84,6 +84,21 @@ app.post('/api/persons', (request, response) => {
   response.json(contact);
 });
 
+//PUT
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body;
+  const contact = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Contact.findByIdAndUpdate(request.params.id, contact, { new: true })
+    .then((updatedContact) => {
+      response.json(updatedContact);
+    })
+    .catch((error) => next(error));
+});
+
 //Errors
 //The error handler checks if the error is a CastError exception, caused by an invalid object id for Mongo
 //In this situation the error handler will send a response to the browser with the response object passed as a parameter.
