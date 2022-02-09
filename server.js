@@ -42,11 +42,7 @@ app.get('/info', (req, res) => {
 app.get('/api/persons/:id', (request, response, next) => {
   Contact.findById(request.params.id)
     .then((contact) => {
-      if (contact) {
-        response.json(contact);
-      } else {
-        response.status(404).end();
-      }
+      contact ? response.json(contact) : response.status(404).end();
     })
     .catch((error) => next(error));
 });
