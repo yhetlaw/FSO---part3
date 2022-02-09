@@ -53,13 +53,12 @@ app.get('/api/persons/:id', (request, response, next) => {
 });
 
 //DELETE
-app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id;
-  console.log(id);
-  Contact.deleteOne({ _id: new BSON.ObjectId(id) }).then(() => {
-    console.log(`${BSON.ObjectId(id)} has been deleted`);
-  });
-  response.status(204).end();
+app.delete('/api/persons/:id', (request, response, next) => {
+  Contact.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 //POST
