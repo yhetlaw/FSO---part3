@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 const BSON = require('bson');
 const Contact = require('./models/contact');
 
-const { json } = require('express');
-
 const express = require('express');
+const { json } = require('express');
 const app = express();
 app.use(express.json());
 app.use(express.static('build'));
