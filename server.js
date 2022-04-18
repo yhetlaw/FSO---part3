@@ -58,21 +58,14 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 //POST
 app.post('/api/persons', (request, response, next) => {
+  console.log(request)
   const body = request.body
-  if (!body.name) {
-    return response.status(400).json({
-      error: 'Name is missing',
-    })
-  } else if (!body.number) {
-    return response.status(400).json({
-      error: 'Number is missing',
-    })
-  }
 
   const contact = new Contact({
     name: body.name,
     number: body.number,
   })
+
   contact
     .save()
     .then((result) => {
