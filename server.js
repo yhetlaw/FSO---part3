@@ -1,10 +1,8 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
-const BSON = require('bson')
 const Contact = require('./models/contact')
 
 const express = require('express')
-const { json } = require('express')
 const app = express()
 app.use(express.json())
 app.use(express.static('build'))
@@ -16,8 +14,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 const cors = require('cors')
 app.use(cors())
-
-const { response } = require('express')
 
 //CONNECTION
 console.log(process.env.MONGODB_URI)
@@ -33,10 +29,11 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/info', (req, res) => {
   let a = new Date().toString()
-  console.log(a)
-  res.send(`<p>Phonebook has info for ${persons.length} people</p>
+  Contact.find({}).then((persons) => {
+    res.send(`<p>Phonebook has info for ${persons.length} people</p>
   <p>${a}</p>
   `)
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -50,7 +47,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 //DELETE
 app.delete('/api/persons/:id', (request, response, next) => {
   Contact.findByIdAndRemove(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end()
     })
     .catch((error) => next(error))
