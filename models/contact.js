@@ -21,12 +21,14 @@ const contactSchema = new mongoose.Schema({
   number: {
     type: String,
     minlength: 8,
-    /* validate: {
+    validate: {
       validator: function (v) {
-        return /\d/g.test(v)
+        if (v.includes('-')) {
+          return /^(\d{2}|\d{3})-\d/.test(v)
+        }
       },
       message: (props) => `${props.value} is not a valid phone number!`,
-    }, */
+    },
     required: [true, 'User phone number required'],
   },
 })
